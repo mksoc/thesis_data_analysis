@@ -2,10 +2,10 @@ import pandas as pd
 
 # Read response file
 response_file = '../data/risposte.xlsx'
-responses_df = pd.read_excel(response_file)
+df_all = pd.read_excel(response_file)
 
 # Remove timestamps
-responses_df = responses_df.drop(responses_df.columns[0], axis=1)
+df_all = df_all.drop(df_all.columns[0], axis=1)
 
 # Rename headers
 headers = ['Customer',
@@ -22,18 +22,24 @@ headers = ['Customer',
            'PlaceOfResidence',
            'Province',
            'SelfOrOthers']
-responses_df = responses_df.set_axis(headers, axis=1)
+df_all = df_all.set_axis(headers, axis='columns')
+
+# Column 'Customer'
+s = df_all['Customer']
+s = s.astype('category')
+s = s.cat.rename_categories({'Si': 'Yes'})
+df_all['Customer'] = s
 
 # Change spurious 'On-line' to 'E-commerce'
-index = responses_df[responses_df['PurchaseLocation'] == 'On-line'].index[0]
-responses_df.at[index, 'PurchaseLocation'] = 'E-commerce'
+index = df_all[df_all['PurchaseLocation'] == 'On-line'].index[0]
+df_all.at[index, 'PurchaseLocation'] = 'E-commerce'
 
 # Change spurious 'Da molto più di 5 anni' to '5 anni (dal lancio dei primi rossetti)'
-index = responses_df[responses_df['BrandKnownFor'] == 'Da molto più di 5 anni'].index[0]
-responses_df.at[index, 'BrandKnownFor'] = '5 anni (dal lancio dei primi rossetti)'
+index = df_all[df_all['BrandKnownFor'] == 'Da molto più di 5 anni'].index[0]
+df_all.at[index, 'BrandKnownFor'] = '5 anni (dal lancio dei primi rossetti)'
 
 # Extract only 'yes' responses
-responses_yes_df = responses_df[responses_df['Customer'] == 'Si']
+df_yes = df_all[df_all['Customer'] == 'Si']
 
 # Calculate expenditure from last purchase
 prices_dict = {
@@ -64,6 +70,6 @@ prices_dict = {
     'Pennelli':                                             22.00,
 }
 
-s = responses_yes_df['LastPurchase']
+s = df_yes['LastPurchase']
 s = s.apply(lambda item: sum([prices_dict[i.strip()] for i in item.split(',') if i.strip() in prices_dict]))
-responses_yes_df['AvgReceipt'] = s
+df_yes['AvgReceipt'] = s

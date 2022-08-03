@@ -1,18 +1,21 @@
 import matplotlib.pyplot as plt
 from matplotlib_venn import venn3
 
-def response_rate(answers):
+plot_path = '../plots/'
+
+def response_rate(df):
     # Calculate the ratio of yes
-    number_of_customers = len(answers[answers['Customer'] == 'Si'].index)
-    total_answers = len(answers.index)
+    number_of_customers = len(df[df['Customer'] == 'Si'].index)
+    total_answers = len(df.index)
 
     customer_percentage = 100 * (number_of_customers / total_answers)
     print(f'Number of customers: {number_of_customers}/{total_answers} ({customer_percentage:.1f} %)')
 
-    answers['Customer'].value_counts().plot.pie(autopct='%1.1f%%', startangle=90, ylabel='')
-    plt.show()
+    df['Customer'].value_counts().plot.pie(autopct='%1.1f%%', startangle=90, labels=['No', 'Yes'], ylabel='')
+    plt.savefig(plot_path + 's01_response_rate.pdf')
+    plt.clf()
 
-def frequency(answers):
+def frequency(df):
     categories = [
         "da 1 a 2 volte l'anno",
         "da 3 a 4 volte l'anno",
@@ -21,16 +24,17 @@ def frequency(answers):
         "più di 9 volte l'anno",
     ]
 
-    s = answers['Frequency'].astype('category')
+    s = df['Frequency'].astype('category')
     counts = s.value_counts().reindex(categories).fillna(0)
     ax = counts.plot.bar(rot=45)
     ax.bar_label(ax.containers[0])
     plt.tight_layout()
-    plt.show()
+    plt.savefig(plot_path + 's02_frequency.pdf')
+    plt.clf()
 
-def purchase_location(answers):
+def purchase_location(df):
     # Plot Venn diagrams
-    value_counts_dict = answers['PurchaseLocation'].value_counts().to_dict()
+    value_counts_dict = df['PurchaseLocation'].value_counts().to_dict()
     venn3([
         value_counts_dict['E-commerce'],
         value_counts_dict['PopUp Store'],
@@ -42,10 +46,11 @@ def purchase_location(answers):
         ],
         set_labels = ('E-commerce', 'PopUp Store', 'Experience Store'))
 
-    plt.show()
+    plt.savefig(plot_path + 's03_purchase_location.pdf')
+    plt.clf()
 
-def brand_known_for(answers):
-    counts = answers['BrandKnownFor'].value_counts()[
+def brand_known_for(df):
+    counts = df['BrandKnownFor'].value_counts()[
         ['Meno di un anno',
         '1 anno',
         '2 anni',
@@ -65,9 +70,11 @@ def brand_known_for(answers):
         '4 anni',
         '5 anni'])
     plt.tight_layout()
-    plt.show()
+    plt.savefig(plot_path + 's04_brand_known_for.pdf')
+    plt.clf()
 
-def receipt(answers):
-    s = answers['AvgReceipt']
+def receipt(df):
+    s = df['AvgReceipt']
     s.plot.hist(bins=6)
-    plt.show()
+    plt.savefig(plot_path + 's05_receipt.pdf')
+    plt.clf()
