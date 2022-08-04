@@ -44,7 +44,7 @@ def check_spurious_values(s, value_list, multiple=False):
     print()
 
 # Read response file
-response_file = '../data/risposte.xlsx'
+response_file = 'data/risposte.xlsx'
 df = pd.read_excel(response_file)
 
 # Remove timestamps
@@ -228,7 +228,6 @@ categories = {
 # Translate data
 for key, value in categories.items():
     df[column] = df[column].str.replace(key, value, regex=False)
-print(df[column].value_counts())
 # Clean data
 df[column] = df[column].str.replace('Per il mio kit professionale', 'Me')
 # check_spurious_values(df[column], list(categories.keys()), multiple=True)
