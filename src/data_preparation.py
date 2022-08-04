@@ -1,4 +1,6 @@
 from audioop import mul
+from calendar import c
+from curses import keyname
 import pandas as pd
 from pyparsing import col
 
@@ -151,3 +153,89 @@ column = 'AllPurchases'
 df[column] = df[column].str.replace('passion', 'Passion')
 # Turn single strings into list of strings
 df[column] = df[column].str.split(',').map(lambda item: [i.strip() for i in item], na_action='ignore')
+
+# Column 'Satisfaction'
+column = 'Satisfaction'
+# Define categories
+categories = {
+    "Assolutamente si":     "Definitely yes",
+    "Sì":                   "Yes",
+    "Sì, ma non di tutti":  "Yes, but not all",
+    "No":                   "No",
+    "Assolutamente no":     "Definitely no",
+}
+# Set categories
+df[column] = fill_rename_categories(df[column], categories)
+
+# Column 'Gender'
+column = 'Gender'
+# Define categories
+categories = {
+    "Maschio":  "Male",
+    "Femmina":  "Female",
+    "Altro":    "Other",
+}
+# Set categories
+df[column] = fill_rename_categories(df[column], categories)
+
+# Column 'Age'
+column = 'Age'
+# Set int dtype
+df[column] = df[column].astype('int')
+
+# Column 'Education'
+column = 'Education'
+# Define categories
+categories = {
+    "Licenza media":                        "Middle school",
+    "Scuola secondaria di secondo grado":   "High school",
+    "Laurea triennale":                     "Bachelor's degree",
+    "Laurea magistrale":                    "Master's degree",
+    "Master":                               "Postgraduate specialisation",
+    "Dottorato di ricerca":                 "PhD",
+}
+# Clean data
+df[column] = df[column].str.replace('Acconciatura', 'Licenza media')
+index = df[df[column].str.contains('Estetista, onicotenica')].index[0]
+df.at[index, column] = 'Scuola secondaria di secondo grado'
+# Set categories
+df[column] = fill_rename_categories(df[column], categories)
+
+# Column 'Profession'
+column = 'Profession'
+# Define categories
+categories = {
+    "Studente":                                     "Student",
+    "Stagista":                                     "Intern",
+    "Lavoratore autonomo":                          "Self-employed",
+    "Lavoratore dipendente a tempo determinato":    "Employed (fixed-term contract)",
+    "Lavoratore dipendente a tempo indeterminato":  "Employed (permanent contract)",
+    "Disoccupata\o":                                "Unemployed",
+    "Altro":                                        "Other",
+}
+# Set categories
+df[column] = fill_rename_categories(df[column], categories)
+
+# Column 'SelfOrOthers'
+column = 'SelfOrOthers'
+# Define categories
+categories = {
+    "Me":       "Me",
+    "Famiglia": "Family",
+    "Amic*":    "Friends",
+    "Partner":  "Partner",
+}
+# Translate data
+for key, value in categories.items():
+    df[column] = df[column].str.replace(key, value, regex=False)
+print(df[column].value_counts())
+# Clean data
+df[column] = df[column].str.replace('Per il mio kit professionale', 'Me')
+# check_spurious_values(df[column], list(categories.keys()), multiple=True)
+# Turn single strings into list of strings
+df[column] = df[column].str.split(',').map(lambda item: [i.strip() for i in item], na_action='ignore')
+
+# Save dataframes for analysis
+df_all = df
+df_yes = df[df['Customer'] == 'Yes']
+df_no  = df[df['Customer'] == 'No']
