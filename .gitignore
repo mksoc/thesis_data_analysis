@@ -2,6 +2,7 @@ data/*
 plots/*.pdf
 *.tar.gz
 .vscode/
+*.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
