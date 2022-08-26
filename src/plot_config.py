@@ -38,7 +38,7 @@ pie_kwargs = {
 }
 
 bar_kwargs = {
-    'rot':      0,
+    'rot':      0
 }
 
 
