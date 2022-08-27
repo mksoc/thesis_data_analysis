@@ -15,7 +15,8 @@ plt.rcParams.update({
 
 # Colors
 # colors = ('#e5e1ee', '#dffdff', '#90bede', '#68edc6', '#90f3ff') # Noemi's palette
-colors = ('#ffcdb2', '#ffb4a2', '#e5989b', '#b5838d', '#6d6875')
+# colors = ('#ffcdb2', '#ffb4a2', '#e5989b', '#b5838d', '#6d6875')
+colors = ('#D8C3F7', '#9EF0EF', '#83BFDF', '#57E6B1', '#ABB2F5')
 colormap = ('#E8E8E8', '#D4D4D4', '#BFBFBF', '#ABA9AD', '#96939B', '#766B79', '#564256')
 extra_line_color = 'royalblue'
 cmap = ListedColormap(colormap) # Custom colormap
@@ -60,8 +61,8 @@ def hide_spines(ax):
     ax.spines.top.set_visible(False)    # Hide top spine
 
 # Plot heatmap
-diverging_cmap = sns.diverging_palette(20, 230, as_cmap=True)
-light_cmap = sns.light_palette("#2ecc71", as_cmap=True)
+diverging_cmap = sns.diverging_palette(47, 263, s=81, l=73, sep=1, n=12, as_cmap=True)
+light_cmap = sns.light_palette('#3C90E0', as_cmap=True)
 
 def heatmap(data, filename, cmap=light_cmap, fmt='.2g'):
     sns.set_theme(style="white")
